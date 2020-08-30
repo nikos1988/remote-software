@@ -140,7 +140,7 @@ void Integrations::load() {
         createInstance(obj, map);
     }
 
-    if (m_integrationsLoaded >= m_integrationsToLoad) {
+    if (m_integrationsToLoad == 0 || m_integrationsLoaded < m_integrationsToLoad) {
         emit loadComplete();
     }
 }
