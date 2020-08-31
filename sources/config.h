@@ -28,6 +28,7 @@
 #include <QQmlContext>
 #include <QtDebug>
 
+#include "environment.h"
 #include "jsonfile.h"
 #include "yio-interface/configinterface.h"
 #include "yio-interface/unitsystem.h"
@@ -49,6 +50,7 @@ class Config : public QObject, public ConfigInterface {
     Q_PROPERTY(UnitSystem::Enum unitSystem READ getUnitSystem WRITE setUnitSystem NOTIFY unitSystemChanged)
 
  public:
+    static const QString CFG_FILE_NAME;
     // Common configuration keys. Initialized in config.cpp
     // HELP: anyone knows how to properly define "static const QString" constants across Qt plugin boundaries?
     static const QString KEY_ID;
@@ -142,8 +144,14 @@ class Config : public QObject, public ConfigInterface {
 
     QQmlApplicationEngine* getAppEngine() { return m_engine; }
 
+    Q_INVOKABLE bool isFirstRun();
+    Q_INVOKABLE bool finishFirstRun();
+
+    bool resetConfigurationForFirstRun();
+
  public:
-    explicit Config(QQmlApplicationEngine* engine, QString configFilePath, QString schemaFilePath, QString appPath);
+    explicit Config(QQmlApplicationEngine* engine, QString configFilePath, QString schemaFilePath,
+                    const Environment* environment);
     ~Config() override;
 
     static Config* getInstance() { return s_instance; }
@@ -173,7 +181,7 @@ class Config : public QObject, public ConfigInterface {
     template <class EnumClass>
     EnumClass stringToEnum(const QVariant& enumString, const EnumClass& defaultValue) const {
         const auto metaEnum = QMetaEnum::fromType<EnumClass>();
-        bool ok;
+        bool       ok;
         const auto value = metaEnum.keyToValue(enumString.toString().toUtf8(), &ok);
         return ok ? static_cast<EnumClass>(value) : defaultValue;
     }
@@ -200,4 +208,7 @@ class Config : public QObject, public ConfigInterface {
     QVariantMap      m_cacheUIPages;
     QVariantMap      m_cacheUIGroups;
     UnitSystem::Enum m_cacheUnitSystem = UnitSystem::METRIC;
+
+    const Environment* m_environment;
+    QString            m_markerFileFirstRun;
 };

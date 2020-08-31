@@ -22,8 +22,10 @@
 
 #include "environment.h"
 
+#include <QCoreApplication>
 #include <QDebug>
 #include <QFile>
+#include <QFileInfo>
 #include <QLoggingCategory>
 #include <QSysInfo>
 #include <QTextStream>
@@ -49,6 +51,23 @@ Environment::Environment(QObject *parent) : QObject(parent) {
 }
 
 QString Environment::getRemoteOsVersion() const { return qEnvironmentVariable(ENV_YIO_OS_VERSION, UNKNOWN); }
+
+QString Environment::getResourcePath() const {
+    QString appPath = QCoreApplication::applicationDirPath();
+    if (m_os == OS::macOS) {
+        return QFileInfo(appPath + "/../").canonicalPath() + "/Contents/Resources";
+    }
+
+    return appPath;
+}
+
+QString Environment::getConfigurationPath() const {
+    if (m_yioRemote) {
+        return "/boot";
+    }
+
+    return getResourcePath();
+}
 
 OS Environment::determineOS() {
 #if defined(Q_OS_ANDROID)

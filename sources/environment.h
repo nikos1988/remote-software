@@ -72,6 +72,13 @@ class Environment : public QObject {
      */
     QString getRemoteOsVersion() const;
 
+    /**
+     * @brief Returns the directory which contains the application resources
+     * @details The application resources are usually stored in the same directory of the application executable.
+     */
+    QString getResourcePath() const;
+    QString getConfigurationPath() const;
+
  private:
     OS      determineOS();
     QString getRaspberryRevision(OS os);
