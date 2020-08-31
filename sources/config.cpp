@@ -209,7 +209,7 @@ bool Config::resetConfigurationForFirstRun() {
             return false;
         }
 
-        if (!std::filesystem::copy_file(defaultConfigPath.toStdString(), cfgFile.toStdString(),
+        if (!std::filesystem::copy_file(defaultConfigFile.toStdString(), cfgFile.toStdString(),
                                         std::filesystem::copy_options::overwrite_existing)) {
             qCCritical(CLASS_LC) << "Error copying default configuration.";
             return false;
