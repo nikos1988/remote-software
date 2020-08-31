@@ -35,7 +35,7 @@ jobs:
         - {
             name: "Linux Latest x64", artifact: "Linux-x64", build: "release",
             qmake-args: "CONFIG+=release",
-            os: ubuntu-latest
+            os: ubuntu-20.04
           }
         - {
             name: "macOS Latest x64", artifact: "macOS-x64", build: "release",
