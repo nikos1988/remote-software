@@ -79,7 +79,7 @@ jobs:
       if: runner.os == 'Linux'
       run: |
         sudo apt update
-        sudo apt install libavahi-client-dev libgl1-mesa-dev
+        sudo apt install libavahi-client-dev libgl1-mesa-dev g++-8
 
     - name: Download Qt Creator
       id: qt_creator
