@@ -36,6 +36,7 @@
 static Q_LOGGING_CATEGORY(CLASS_LC, "config");
 
 const QString Config::CFG_FILE_NAME = "config.json";
+const QString Config::CFG_FILE_NAME_DEF = "config.json.def";
 const QString Config::KEY_ID = CFG_KEY_ID;
 const QString Config::KEY_FRIENDLYNAME = CFG_KEY_FRIENDLYNAME;
 const QString Config::KEY_ENTITY_ID = CFG_KEY_ENTITY_ID;
@@ -59,6 +60,7 @@ Config::Config(QQmlApplicationEngine *engine, QString configFilePath, QString sc
       m_environment(environment),
       m_markerFileFirstRun("/firstrun") {
     Q_ASSERT(engine);
+    Q_ASSERT(environment);
 
     s_instance = this;
 
@@ -77,6 +79,8 @@ Config::Config(QQmlApplicationEngine *engine, QString configFilePath, QString sc
             }
         }
     }
+
+    qCDebug(CLASS_LC) << "Configuration file:" << configFilePath << "First run marker file:" << m_markerFileFirstRun;
 }
 
 Config::~Config() { s_instance = nullptr; }
@@ -184,7 +188,11 @@ QObject *Config::getQMLObject(QList<QObject *> nodes, const QString &name) {
 
 QObject *Config::getQMLObject(const QString &name) { return getQMLObject(m_engine->rootObjects(), name); }
 
-bool Config::isFirstRun() { return QFile::exists(m_markerFileFirstRun); }
+bool Config::isFirstRun() {
+    bool firstRun = QFile::exists(m_markerFileFirstRun);
+    qCDebug(CLASS_LC) << "First run:" << firstRun;
+    return firstRun;
+}
 
 bool Config::finishFirstRun() {
     qCDebug(CLASS_LC) << "First run finished, removing marker file:" << m_markerFileFirstRun;
@@ -193,7 +201,7 @@ bool Config::finishFirstRun() {
 
 bool Config::resetConfigurationForFirstRun() {
     QString defaultConfigFile =
-        qEnvironmentVariable(Environment::ENV_YIO_APP_DIR, m_environment->getResourcePath()) + "/" + CFG_FILE_NAME;
+        qEnvironmentVariable(Environment::ENV_YIO_APP_DIR, m_environment->getResourcePath()) + "/" + CFG_FILE_NAME_DEF;
 
     if (!QFile::exists(defaultConfigFile)) {
         qCCritical(CLASS_LC) << "Default config file not found. Cannot restore to defaults.";

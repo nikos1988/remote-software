@@ -51,6 +51,7 @@ class Config : public QObject, public ConfigInterface {
 
  public:
     static const QString CFG_FILE_NAME;
+    static const QString CFG_FILE_NAME_DEF;
     // Common configuration keys. Initialized in config.cpp
     // HELP: anyone knows how to properly define "static const QString" constants across Qt plugin boundaries?
     static const QString KEY_ID;
