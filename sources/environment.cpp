@@ -35,7 +35,7 @@ const char *Environment::ENV_YIO_APP_DIR = "YIO_APP_DIR";
 const char *Environment::ENV_YIO_OS_VERSION = "YIO_OS_VERSION";
 const char *Environment::ENV_YIO_PLUGIN_DIR = "YIO_PLUGIN_DIR";
 
-const char *Environment::UNKNOWN = "UNKNOWN";
+const QString Environment::UNKNOWN = "UNKNOWN";
 
 static Q_LOGGING_CATEGORY(CLASS_LC, "env");
 

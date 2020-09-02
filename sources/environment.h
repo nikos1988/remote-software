@@ -37,7 +37,8 @@ class Environment : public QObject {
     static const char* ENV_YIO_APP_DIR;
     static const char* ENV_YIO_OS_VERSION;
     static const char* ENV_YIO_PLUGIN_DIR;
-    static const char* UNKNOWN;
+
+    static const QString UNKNOWN;
 
  public:
     /**
