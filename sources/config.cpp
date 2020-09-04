@@ -25,7 +25,7 @@
 
 #include <QJsonDocument>
 #include <QLoggingCategory>
-#include <QRegularExpression>
+#include <QStorageInfo>
 
 #if defined(Q_OS_LINUX)
 #include <filesystem>
@@ -69,14 +69,9 @@ Config::Config(QQmlApplicationEngine *engine, QString configFilePath, QString sc
     m_languages = translationCfg.read().toList();
 
     if (environment->isYioRemote()) {
-        QRegularExpression      re("^v?(\\d+)\\.(\\d+)\\.");
-        QRegularExpressionMatch match = re.match(environment->getRemoteOsVersion());
-        if (match.hasMatch()) {
-            QString version = match.captured(1) + match.captured(2);
-            if (version.toInt() > 4) {
-                // read only root partition has been introduced with version 0.5.0
-                m_markerFileFirstRun = "/var/yio/firstrun";
-            }
+        QStorageInfo storage = QStorageInfo("/");
+        if (storage.isReadOnly()) {
+            m_markerFileFirstRun = "/var/yio/firstrun";
         }
     }
 
