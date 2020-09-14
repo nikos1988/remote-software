@@ -101,6 +101,7 @@ HEADERS += \
     sources/entities/switch.h \
     sources/entities/weather.h \
     sources/environment.h \
+    sources/factoryreset.h \
     sources/filedownload.h \
     sources/fileio.h \
     sources/hardware/batterycharger.h \
@@ -166,6 +167,7 @@ SOURCES += \
     sources/entities/switch.cpp \
     sources/entities/weather.cpp \
     sources/environment.cpp \
+    sources/factoryreset.cpp \
     sources/filedownload.cpp \
     sources/hardware/buttonhandler.cpp \
     sources/hardware/device.cpp \
@@ -259,10 +261,10 @@ linux {
             sources/hardware/linux/arm/displaycontrol_yio.cpp \
             sources/hardware/linux/arm/drv2605.cpp \
             sources/hardware/linux/arm/mcp23017_interrupt.cpp
-
-        # needed for std::filesystem
-        LIBS += -lstdc++fs
     }
+
+    # needed for std::filesystem
+    LIBS += -lstdc++fs
 }
 
 # Android specific files (empty template for now)

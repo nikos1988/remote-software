@@ -22,31 +22,37 @@
 
 #pragma once
 
-#include <QCoreApplication>
 #include <QObject>
 
-class CommandLineHandler : public QObject {
+#include "environment.h"
+
+class FactoryReset : public QObject {
     Q_OBJECT
 
+    Q_PROPERTY(bool supported READ isSupported CONSTANT)
+    Q_PROPERTY(QString getError READ getError CONSTANT)
+
  public:
-    explicit CommandLineHandler(QObject *parent = nullptr);
+    explicit FactoryReset(Environment* environment, QObject* parent = nullptr);
 
-    void process(const QCoreApplication &app, const QString &resourcePath, const QString &configurationPath);
+    bool    isSupported() const;
+    QString getError() const { return m_error; }
 
-    QString getProfile() const { return m_profile; }
+ public slots:  // NOLINT open issue: https://github.com/cpplint/cpplint/pull/99
+    void performReset();
 
-    QString configFile() const { return m_cfgFile; }
-    QString configSchemaFile() const { return m_cfgSchemaFile; }
-    QString hardwareConfigFile() const { return m_hwCfgFile; }
-    QString hardwareConfigSchemaFile() const { return m_hwCfgSchemaFile; }
+ signals:
+    void factoryResetStarted();
+    void factoryResetCompleted();
+
+    /**
+     * @brief This signal is emitted if a download failed.
+     * @param errorMsg A human-readable description of the error
+     */
+    void factoryResetFailed(const QString& errorMsg);
 
  private:
-    bool validateJson(const QString &filePath, const QString &schemaPath);
+    QString m_error;
 
- private:
-    QString m_profile;
-    QString m_cfgFile;
-    QString m_cfgSchemaFile;
-    QString m_hwCfgFile;
-    QString m_hwCfgSchemaFile;
+    Environment* m_environment;
 };
